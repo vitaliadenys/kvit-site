@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Підключення Threads — Kvit Reply Assistant</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="brand" href="/">KVIT studio</a>
+    <nav class="lang"><span>Kvit Reply Assistant</span></nav>
+  </header>
+
+  <h1 id="title">Підключення Threads</h1>
+  <p class="lead" id="lead">Ця сторінка використовується працівниками KVIT studio, щоб підключити акаунт @kvit.studio до внутрішнього додатка Kvit Reply Assistant.</p>
+
+  <div class="card" id="result" hidden>
+    <p id="msg"></p>
+    <p><span class="code" id="code"></span></p>
+    <div class="buttons"><button class="btn primary" id="copy" type="button">Скопіювати код</button></div>
+    <p class="muted">Код одноразовий і діє приблизно годину. Вставте його в Kvit Reply Assistant. Без секретного ключа додатка він нічого не відкриває.</p>
+  </div>
+
+  <footer class="site">
+    <a href="/privacy/">Privacy Policy</a><a href="/data-deletion/">Data deletion</a><a href="/terms/">Terms</a>
+  </footer>
+</div>
+<script>
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  var code = p.get('code');
+  var err = p.get('error_description') || p.get('error');
+  var box = document.getElementById('result');
+  var msg = document.getElementById('msg');
+  if (code) {
+    code = code.replace(/#_$/, '');
+    document.getElementById('title').textContent = 'Акаунт підключено ✓';
+    msg.textContent = 'Threads надав код авторизації:';
+    document.getElementById('code').textContent = code;
+    box.hidden = false;
+    document.getElementById('copy').addEventListener('click', function () {
+      try {
+        navigator.clipboard.writeText(code).then(function () {
+          document.getElementById('copy').textContent = 'Скопійовано';
+        });
+      } catch (e) { /* clipboard unavailable: user can select the code manually */ }
+    });
+  } else if (err) {
+    document.getElementById('title').textContent = 'Підключення не вдалося';
+    msg.textContent = 'Threads повернув помилку: ' + err;
+    document.getElementById('copy').hidden = true;
+    document.getElementById('code').hidden = true;
+    box.hidden = false;
+  }
+})();
+</script>
+</body>
+</html>
